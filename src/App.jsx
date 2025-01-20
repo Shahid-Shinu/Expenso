@@ -6,7 +6,7 @@ function App() {
 
   return (
     <Router>
-      Home
+      <div className='font-extrabold'>Home</div>
       <AppRoutes />
     </Router>
   )
