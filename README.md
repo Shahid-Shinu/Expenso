@@ -6,3 +6,23 @@ Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+
+npm run dev 
+
+npx prisma migrate dev --name yourcommitname
+
+nodemon index.js
+
+
+psql -U postgres
+
+brew services start postgresql
+
+brew services list
+
+psql
+ALTER USER postgres PASSWORD 'newpassword';
+
+psql postgres
+s
