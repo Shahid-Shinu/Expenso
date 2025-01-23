@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    expense: []
+    expenses: [],
+    userId: 0
 }
 
 const expenseSlice = createSlice({
@@ -13,6 +14,9 @@ const expenseSlice = createSlice({
         },
         removeExpense: (state, action) => {
             state.expenses = state.expenses.filter(exp => exp.id != action.payload)
+        },
+        addUser: (state, action) => {
+            state.userId = action.payload
         }
     }
 })

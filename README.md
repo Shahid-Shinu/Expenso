@@ -25,4 +25,11 @@ psql
 ALTER USER postgres PASSWORD 'newpassword';
 
 psql postgres
-s
+
+
+
+Installations
+
+npm install @tabler/icons-react
+
+npm install axios

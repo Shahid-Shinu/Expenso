@@ -28,8 +28,8 @@ app.post("/addExpense", async (req, res) => {
 });
 
 //Get All Expenses for a User
-app.get('/expenses/:userId', async (req, res) => {
-  const { userId } = req.params;
+app.get('/getExpenses', async (req, res) => {
+  const { userId } = req.query;
   const expenses = await prisma.expense.findMany({
     where: { userId }
   });
@@ -37,8 +37,8 @@ app.get('/expenses/:userId', async (req, res) => {
 });
 
 // Delete Expense
-app.delete("/expenses/:id", async (req, res) => {
-  const { id } = req.params;
+app.delete("/deleteExpenses", async (req, res) => {
+  const { id } = req.query;
   await prisma.expense.delete({ where: { id } });
   res.json({ message: "Expense deleted" });
 });

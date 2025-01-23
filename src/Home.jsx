@@ -1,8 +1,12 @@
 import React from 'react';
 
-
 export const Home = () => {
     return <>
-        Home
+      <div className='font-extrabold'>Home</div>
+      <div className='font-extrabold'>Home</div>
+      <div className='font-extrabold'>Home</div>
+      <div className='font-extrabold'>Home</div>
+      <div className='font-extrabold'>Home</div>
+      <div className='font-extrabold'>Home</div>
     </>
 }
