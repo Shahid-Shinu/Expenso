@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
+import authRoutes from './route.mjs' 
 
 const app = express();
 const prisma = new PrismaClient();
@@ -8,15 +9,7 @@ const prisma = new PrismaClient();
 app.use(cors());
 app.use(express.json());
 
-app.post('/signup', async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, 10); // Hash password
-  const user = await prisma.user.create({
-    data: { username, password: hashedPassword }
-  });
-  res.json(user);
-});
-
+app.use("/api", authRoutes);
 
 // Add Expense
 app.post("/addExpense", async (req, res) => {

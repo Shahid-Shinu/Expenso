@@ -12,7 +12,7 @@ npm run dev
 
 npx prisma migrate dev --name yourcommitname
 
-nodemon index.js
+nodemon backend/index.mjs
 
 
 psql -U postgres
