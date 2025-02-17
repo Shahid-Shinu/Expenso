@@ -6,9 +6,10 @@ import { Home } from "./Home";
 import Expense from "./Expense";
 import Login from "./Login";
 import Signup from "./Signup";
-import { logoutSuccess } from "./features/authSlice";
+import { loginUser, logoutUser } from "./features/authSlice";
 import { Button, Group } from "@mantine/core";
 import ProtectedRoute from "./ProtectedRoute";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
@@ -22,7 +23,7 @@ function App() {
           <ExpenseMenu />
           <Group>
             {user ? (
-              <Button variant="outline" color="red" onClick={() => dispatch(logoutSuccess())}>
+              <Button variant="outline" color="red" onClick={() => dispatch(logoutUser(useNavigate()))}>
                 Logout
               </Button>
             ) : (

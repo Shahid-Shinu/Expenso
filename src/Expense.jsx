@@ -13,6 +13,7 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const SelectItem = ({ value, label, icon, ...others }) => (
   <div {...others} className="flex items-center gap-2 p-2">
     {icon} <span>{label}</span>
@@ -25,6 +26,8 @@ const Expense = () => {
   const [category, setCategory] = useState("");
   const xIcon = <IconX size={20} />;
   const checkIcon = <IconCheck size={20} />;
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id
 
   // Category options with icons
   const categories = [
@@ -40,7 +43,7 @@ const Expense = () => {
     if (!expenseName || !expenseAmount || !category) {
         notifications.show({
           title: 'Bummer!',
-          message: 'Details Mee tatha rastara 🤬🤬🤬',
+          message: 'Need to Fill all the required details',
           icon: xIcon,
           color: "red",
           autoClose: 2000
@@ -48,7 +51,7 @@ const Expense = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/addExpense", {
+      const response = await axios.post(`${VITE_API_URL}/addExpense`, {
         name: expenseName,
         amount: parseFloat(expenseAmount),
         category,

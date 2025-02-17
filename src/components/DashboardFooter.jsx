@@ -6,12 +6,12 @@ const DashboardFooter = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-gray-900 p-4 flex justify-between items-center">
+    <div className="fixed bottom-0 left-0 w-full bg-blue-900 p-4 flex justify-between items-center">
       <ActionIcon
         size={50}
         radius="xl"
         variant="filled"
-        color="gray"
+        color="purple"
         onClick={() => navigate("/home")}
       >
         <IconHome size={32} />
@@ -34,7 +34,7 @@ const DashboardFooter = () => {
         size={50}
         radius="xl"
         variant="filled"
-        color="gray"
+        color="purple"
         onClick={() => navigate("/stats")}
       >
         <IconChartBar size={32} />

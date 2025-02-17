@@ -2,14 +2,16 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { signupUser } from "./features/authSlice";
 import { Button, TextInput, Container, Title, Paper } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignup = () => {
-    dispatch(signupUser(username, password));
+    dispatch(signupUser(username, password, navigate));
   };
 
   return (
