@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextInput, NumberInput, Select, Button, Notification } from "@mantine/core";
+import { TextInput, NumberInput, Select, Textarea, Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
   IconShoppingCart,
@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
+
 const SelectItem = ({ value, label, icon, ...others }) => (
   <div {...others} className="flex items-center gap-2 p-2">
     {icon} <span>{label}</span>
@@ -22,12 +23,12 @@ const SelectItem = ({ value, label, icon, ...others }) => (
 
 const Expense = () => {
   const [expenseName, setExpenseName] = useState("");
-  const [expenseAmount, setExpenseAmount] = useState("");
+  const [expenseAmount, setExpenseAmount] = useState(0);
   const [category, setCategory] = useState("");
-  const xIcon = <IconX size={20} />;
-  const checkIcon = <IconCheck size={20} />;
+  const [description, setDescription] = useState("");
+
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?.id
+  const userId = user?.id;
 
   // Category options with icons
   const categories = [
@@ -40,14 +41,16 @@ const Expense = () => {
   ];
 
   const handleSubmit = async () => {
+    // validating the form
     if (!expenseName || !expenseAmount || !category) {
-        notifications.show({
-          title: 'Bummer!',
-          message: 'Need to Fill all the required details',
-          icon: xIcon,
-          color: "red",
-          autoClose: 2000
-        })
+      notifications.show({
+        title: "Bummer!",
+        message: "All fields are required",
+        icon: <IconX size={20} />,
+        color: "red",
+        autoClose: 2000,
+      });
+      return; 
     }
 
     try {
@@ -55,7 +58,8 @@ const Expense = () => {
         name: expenseName,
         amount: parseFloat(expenseAmount),
         category,
-        userId: userId,
+        description,
+        userId,
       });
 
       console.log("Expense Added:", response.data);
@@ -64,12 +68,14 @@ const Expense = () => {
         message: "Expense added successfully!",
         color: "green",
         icon: <IconCheck size={16} />,
-        autoClose: 2000
+        autoClose: 2000,
       });
 
+      // Reset all fields, including description
       setExpenseName("");
-      setExpenseAmount("");
+      setExpenseAmount(0);
       setCategory("");
+      setDescription("");
     } catch (error) {
       console.error("Error adding expense:", error);
       notifications.show({
@@ -77,7 +83,7 @@ const Expense = () => {
         message: "Failed to add expense!",
         color: "red",
         icon: <IconX size={16} />,
-        autoClose: 2000
+        autoClose: 2000,
       });
     }
   };
@@ -99,7 +105,7 @@ const Expense = () => {
         label="Expense Amount"
         placeholder="Enter amount"
         value={expenseAmount}
-        onChange={setExpenseAmount}
+        onChange={(value) => setExpenseAmount(value || 0)}
         className="mb-4"
         styles={{ input: { backgroundColor: "#1e293b", color: "white" } }}
       />
@@ -111,6 +117,15 @@ const Expense = () => {
         itemComponent={SelectItem}
         value={category}
         onChange={setCategory}
+        className="mb-4"
+        styles={{ input: { backgroundColor: "#1e293b", color: "white" } }}
+      />
+
+      <Textarea
+        label="Description"
+        placeholder="Enter description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         className="mb-4"
         styles={{ input: { backgroundColor: "#1e293b", color: "white" } }}
       />

@@ -2,7 +2,8 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { signupUser } from "./features/authSlice";
 import { Button, TextInput, Container, Title, Paper } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,16 @@ const Signup = () => {
   const [password, setPassword] = useState("");
 
   const handleSignup = () => {
+    if (!username || !password) {
+      notifications.show({
+        title: "Error",
+        message: "Username and password are required.",
+        color: "red",
+        autoClose: 2000,
+      });
+      return;
+    }
+
     dispatch(signupUser(username, password, navigate));
   };
 
@@ -32,6 +43,12 @@ const Signup = () => {
           mb="md"
         />
         <Button fullWidth onClick={handleSignup}>Sign Up</Button>
+        <span className="text-sm mt-4">
+          Already registered?{" "}
+          <Link to="/login" className="text-blue-400 hover:text-blue-300">
+            Login here
+          </Link>
+       </span>
       </Paper>
     </Container>
   );

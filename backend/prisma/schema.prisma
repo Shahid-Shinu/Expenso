@@ -22,9 +22,11 @@ model User {
 
 model Expense {
   id       String  @id @default(uuid())   // Unique Expense ID
+  name     String  
   amount   Float                           // Expense amount
   category String                          // Expense category (Food, Travel, etc.)
   user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String                          // Foreign key linking to User
   createdAt DateTime @default(now())       // Timestamp
+  description String?
 }

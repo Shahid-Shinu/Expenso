@@ -48,10 +48,9 @@ export const loginUser = (username, password, navigate) => async (dispatch) => {
   }
 };
 
-export const logoutUser = (navigate) => async (dispatch) => {
+export const logoutUser = () => async (dispatch) => {
   await axios.post(`${BACKEND_URL}/api/logout`);
   dispatch(logoutSuccess());
-  navigate("/");
 };
 
 export const signupUser = (username, password, navigate) => async (dispatch) => {

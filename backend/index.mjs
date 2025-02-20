@@ -13,11 +13,24 @@ app.use("/api", authRoutes);
 
 // Add Expense
 app.post("/addExpense", async (req, res) => {
-  const { amount, category, userId } = req.body;
-  const expense = await prisma.expense.create({
-    data: { amount, category, userId }
-  });
-  res.json(expense);
+  const { name, amount, category, description, userId } = req.body;
+
+  if (!name || !amount || !category || !userId) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  console.log(name, amount, category, description, userId);
+
+  try {
+    const newExpense = await prisma.expense.create({
+      data: { name, amount, category, description, userId },
+    });
+
+    res.json(newExpense);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: "Error adding expense", error });
+  }
 });
 
 //Get All Expenses for a User
