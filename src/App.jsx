@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ExpenseMenu from "./components/Menu";
 import DashboardFooter from "./components/DashboardFooter";
 import Home from "./Home";
+import Stats from "./Stats";
 import Expense from "./Expense";
 import Login from "./Login";
 import Signup from "./Signup";
@@ -69,10 +70,11 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto p-4">
+        <div className="flex-1 overflow-auto pb-24">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/stats" element={<Stats />} />
             <Route path="/add-expense" element={<Expense />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

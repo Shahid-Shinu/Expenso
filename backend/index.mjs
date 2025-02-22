@@ -34,18 +34,32 @@ app.post("/addExpense", async (req, res) => {
 //Get All Expenses for a User
 app.get("/expenses/:userId", async (req, res) => {
   const { userId } = req.params;
+  const { page = 1, limit = 5 } = req.query; // Default to page 1, 5 items per page
+  const skip = (parseInt(page) - 1) * parseInt(limit);
 
   try {
-    const expenses = await prisma.expense.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+    const [expenses, total] = await Promise.all([
+      prisma.expense.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+        skip: skip,
+        take: parseInt(limit),
+      }),
+      prisma.expense.count({ where: { userId } }),
+    ]);
 
-    res.json(expenses);
+    res.json({
+      expenses,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: "Error fetching expenses", error });
   }
 });
+
 
 // Editt expense
 app.put("/expense/:expenseId", async (req, res) => {

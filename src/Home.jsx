@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { categories } from "./Expense";
 import { Card, Text, Group, ActionIcon, Modal, TextInput, NumberInput, Select, Button, Tooltip } from "@mantine/core";
-import { IconCalendar, IconTrash, IconEdit, IconAlertTriangle, IconSum, IconSearch } from "@tabler/icons-react";
+import { IconCalendar, IconTrash, IconEdit, IconAlertTriangle, IconSum, IconSearch, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { DatePickerInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
@@ -29,18 +29,22 @@ const Home = () => {
   const [dateRange, setDateRange] = useState([null, null]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [expensesPerPage] = useState(5);
+  const [totalExpenses, setTotalExpenses] = useState(0);
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (user) {
       fetchExpenses();
     }
-  }, [user]);
+  }, [user, currentPage]);
 
   const fetchExpenses = async () => {
     try {
-      const response = await axios.get(`${VITE_API_URL}/expenses/${user.id}`);
-      setExpenses(response.data);
+      const response = await axios.get(`${VITE_API_URL}/expenses/${user.id}?page=${currentPage}limit=${expensesPerPage}`);
+      setExpenses(response.data.expenses);
+      setTotalExpenses(response.data.total)
     } catch (error) {
       console.error("Error fetching expenses:", error);
     }
@@ -48,12 +52,13 @@ const Home = () => {
 
   useEffect(() => {
     let filtered = expenses;
-
     if (dateRange[0] && dateRange[1]) {
-      const [start, end] = dateRange;
+      let [start, end] = dateRange;
+      start = new Date(start).getTime()
+      end = new Date(end).getTime()
       filtered = filtered.filter((exp) => {
-        const expenseDate = dayjs(exp.created_at);
-        return expenseDate.isAfter(start, "day") && expenseDate.isBefore(end, "day");
+        const expenseDate = new Date(exp.createdAt).getTime();
+        return expenseDate >= start && expenseDate <= end
       });
     }
 
@@ -66,7 +71,7 @@ const Home = () => {
       filtered = filtered.filter((exp) =>
         exp.name.toLowerCase().includes(query) ||
         exp.description.toLowerCase().includes(query) ||
-        dayjs(exp.created_at).format("YYYY-MM-DD").includes(query) ||
+        dayjs(exp.created_at).format("DD-MM-YYYY").includes(query) ||
         exp.amount.toString().includes(query)
       );
     }
@@ -75,6 +80,7 @@ const Home = () => {
   }, [dateRange, selectedCategory, searchQuery, expenses]);
 
   const totalExpense = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const totalPages = Math.ceil(totalExpenses / expensesPerPage);
 
   // Open edit modal with pre-filled values
   const handleEditExpense = (expense) => {
@@ -177,6 +183,7 @@ const Home = () => {
         data={categories}
         value={selectedCategory}
         onChange={setSelectedCategory}
+        clearable
         className="flex-1"
       />
       <TextInput
@@ -217,10 +224,10 @@ const Home = () => {
       </Modal>
 
       {/* Edit Expense Modal */}
-      <Modal opened={editOpened} onClose={() => setEditOpened(false)} title="Edit Expense" centered>
+      <Modal opened={editOpened} onClose={() => setEditOpened(false)} title="Edit Expense" size="lg" centered>
         <TextInput label="Expense Name" placeholder="Enter name" value={expenseName} onChange={(e) => setExpenseName(e.target.value)} />
         <NumberInput label="Amount" placeholder="Enter amount" value={expenseAmount} onChange={setExpenseAmount} />
-        <Select label="Category" placeholder="Select category" value={category} onChange={setCategory} data={categories.map(c => ({ value: c.value, label: c.label }))} />
+        <Select label="Category" placeholder="Select category" value={category} onChange={setCategory} data={categories.map(c => ({ value: c.value, label: c.label }))}  dropdownPosition="bottom"/>
         <DatePickerInput label="Edit Created Date" value={createdDate ? new Date(createdDate) : new Date()} onChange={setCreatedDate} className="mb-2"/>
         <TextInput label="Description" placeholder="Enter description" value={description} onChange={(e) => setDescription(e.target.value)} />
         <Button fullWidth className="mt-4 bg-blue-600 hover:bg-blue-500" onClick={handleUpdateExpense}>
@@ -272,6 +279,27 @@ const Home = () => {
           </Card>
         ))
       )}
+      <Group className=" bg-gray-800 text-white shadow p-4 flex justify-center gap-4">
+        <Button
+          variant="outline"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          leftIcon={<IconChevronLeft size={16} />}
+        >
+          Previous
+        </Button>
+        <Text>
+          Page {currentPage} of {totalPages}
+        </Text>
+        <Button
+          variant="outline"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          rightIcon={<IconChevronRight size={16} />}
+        >
+          Next
+        </Button>
+      </Group>
     </div>
     </>
   );
