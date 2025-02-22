@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { TextInput, NumberInput, Select, Textarea, Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import {
-  IconShoppingCart,
-  IconBus,
-  IconMovie,
-  IconHome,
-  IconPizza,
-  IconDots,
-  IconCheck,
-  IconX,
-} from "@tabler/icons-react";
+import {IconShoppingCart,IconBus,IconMovie,IconHome,IconPizza,IconDots,IconCheck,IconX} from "@tabler/icons-react";
+import { DatePickerInput } from "@mantine/dates";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -21,24 +14,24 @@ const SelectItem = ({ value, label, icon, ...others }) => (
   </div>
 );
 
+export const categories = [
+  { value: "Food", label: "Food", icon: <IconPizza size={18} /> },
+  { value: "Transport", label: "Transport", icon: <IconBus size={18} /> },
+  { value: "Shopping", label: "Shopping", icon: <IconShoppingCart size={18} /> },
+  { value: "Bills", label: "Bills", icon: <IconHome size={18} /> },
+  { value: "Entertainment", label: "Entertainment", icon: <IconMovie size={18} /> },
+  { value: "Other", label: "Other", icon: <IconDots size={18} /> },
+];
+
 const Expense = () => {
   const [expenseName, setExpenseName] = useState("");
   const [expenseAmount, setExpenseAmount] = useState(0);
+  const [createdDate, setCreatedDate] = useState(new Date());
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
-
-  // Category options with icons
-  const categories = [
-    { value: "Food", label: "Food", icon: <IconPizza size={18} /> },
-    { value: "Transport", label: "Transport", icon: <IconBus size={18} /> },
-    { value: "Shopping", label: "Shopping", icon: <IconShoppingCart size={18} /> },
-    { value: "Bills", label: "Bills", icon: <IconHome size={18} /> },
-    { value: "Entertainment", label: "Entertainment", icon: <IconMovie size={18} /> },
-    { value: "Other", label: "Other", icon: <IconDots size={18} /> },
-  ];
 
   const handleSubmit = async () => {
     // validating the form
@@ -59,6 +52,7 @@ const Expense = () => {
         amount: parseFloat(expenseAmount),
         category,
         description,
+        createdAt: dayjs(createdDate).format("YYYY-MM-DD"),
         userId,
       });
 
@@ -117,6 +111,15 @@ const Expense = () => {
         itemComponent={SelectItem}
         value={category}
         onChange={setCategory}
+        className="mb-4"
+        styles={{ input: { backgroundColor: "#1e293b", color: "white" } }}
+      />
+
+      <DatePickerInput
+        label="Created Date"
+        placeholder="Select created date"
+        value={createdDate}
+        onChange={setCreatedDate}
         className="mb-4"
         styles={{ input: { backgroundColor: "#1e293b", color: "white" } }}
       />

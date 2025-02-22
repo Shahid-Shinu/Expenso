@@ -13,17 +13,15 @@ app.use("/api", authRoutes);
 
 // Add Expense
 app.post("/addExpense", async (req, res) => {
-  const { name, amount, category, description, userId } = req.body;
+  const { name, amount, category, createdAt, description, userId } = req.body;
 
-  if (!name || !amount || !category || !userId) {
+  if (!name || !amount || !category || !createdAt || !userId) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  console.log(name, amount, category, description, userId);
-
   try {
     const newExpense = await prisma.expense.create({
-      data: { name, amount, category, description, userId },
+      data: { name, amount, category, createdAt : createdAt ? new Date(createdAt) : new Date(), description, userId },
     });
 
     res.json(newExpense);
@@ -34,19 +32,53 @@ app.post("/addExpense", async (req, res) => {
 });
 
 //Get All Expenses for a User
-app.get('/getExpenses', async (req, res) => {
-  const { userId } = req.query;
-  const expenses = await prisma.expense.findMany({
-    where: { userId }
-  });
-  res.json(expenses);
+app.get("/expenses/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const expenses = await prisma.expense.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json(expenses);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching expenses", error });
+  }
 });
 
-// Delete Expense
-app.delete("/deleteExpenses", async (req, res) => {
-  const { id } = req.query;
-  await prisma.expense.delete({ where: { id } });
-  res.json({ message: "Expense deleted" });
+// Editt expense
+app.put("/expense/:expenseId", async (req, res) => {
+  const { expenseId } = req.params;
+  const { name, amount, category, createdAt, description } = req.body;
+
+  try {
+    const updatedExpense = await prisma.expense.update({
+      where: { id: expenseId },
+      data: { name, amount, category, createdAt : createdAt ? new Date(createdAt) : new Date(), description },
+    });
+
+    res.json(updatedExpense);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating expense", error });
+  }
 });
+
+
+// Delete Expense
+app.delete("/expense/:expenseId", async (req, res) => {
+  const { expenseId } = req.params;
+
+  try {
+    await prisma.expense.delete({
+      where: { id: expenseId },
+    });
+
+    res.json({ message: "Expense deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting expense", error });
+  }
+});
+
 
 app.listen(5001, () => console.log("Server running on port 5001"));
