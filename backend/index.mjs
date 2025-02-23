@@ -34,18 +34,42 @@ app.post("/addExpense", async (req, res) => {
 //Get All Expenses for a User
 app.get("/expenses/:userId", async (req, res) => {
   const { userId } = req.params;
-  const { page = 1, limit = 5 } = req.query; // Default to page 1, 5 items per page
+  const { page = 1, limit = 5, start, end, category, searchQuery } = req.query; 
+
   const skip = (parseInt(page) - 1) * parseInt(limit);
 
   try {
     const [expenses, total] = await Promise.all([
       prisma.expense.findMany({
-        where: { userId },
+        where: {
+          userId,
+          ...(parseInt(start) != 0 && parseInt(end) != 0 ? { createdAt: { gte: new Date(start), lte: new Date(end) } } : {}),
+          ...(category ? { category } : {}),
+          ...(searchQuery ? {
+            OR: [
+              { description: { contains: searchQuery, mode: 'insensitive' } },
+              { name: { contains: searchQuery, mode: 'insensitive' } },
+              { amount: { equals: parseFloat(searchQuery) } } // Assuming amount is a number
+            ]
+          } : {})
+        },
         orderBy: { createdAt: "desc" },
         skip: skip,
         take: parseInt(limit),
       }),
-      prisma.expense.count({ where: { userId } }),
+      prisma.expense.count({ where: {
+        userId,
+        ...(parseInt(start) != 0 && parseInt(end) != 0 ? { createdAt: { gte: new Date(start), lte: new Date(end) } } : {}),
+        ...(category ? { category } : {}),
+        ...(searchQuery ? {
+          OR: [
+            { description: { contains: searchQuery, mode: 'insensitive' } },
+            { name: { contains: searchQuery, mode: 'insensitive' } },
+            { amount: { equals: parseFloat(searchQuery) } } // Assuming amount is a number
+          ]
+        } : {})
+      }
+     }),
     ]);
 
     res.json({

@@ -17,7 +17,6 @@ const categoryIcons = categories.reduce((acc, { value, icon }) => {
 
 const Home = () => {
   const [expenses, setExpenses] = useState([]);
-  const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [editOpened, setEditOpened] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
@@ -40,9 +39,16 @@ const Home = () => {
     }
   }, [user, currentPage]);
 
+  useEffect(() => {
+    if (user) {
+      fetchExpenses();
+      setCurrentPage(1)
+    }
+  }, [dateRange, selectedCategory, searchQuery]);
+
   const fetchExpenses = async () => {
     try {
-      const response = await axios.get(`${VITE_API_URL}/expenses/${user.id}?page=${currentPage}limit=${expensesPerPage}`);
+      const response = await axios.get(`${VITE_API_URL}/expenses/${user.id}?page=${currentPage}&limit=${expensesPerPage}&start=${dateRange[0] || 0}&end=${dateRange[1] || 0}&category=${selectedCategory || ''}&searchQuery=${searchQuery}`);
       setExpenses(response.data.expenses);
       setTotalExpenses(response.data.total)
     } catch (error) {
@@ -50,36 +56,7 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    let filtered = expenses;
-    if (dateRange[0] && dateRange[1]) {
-      let [start, end] = dateRange;
-      start = new Date(start).getTime()
-      end = new Date(end).getTime()
-      filtered = filtered.filter((exp) => {
-        const expenseDate = new Date(exp.createdAt).getTime();
-        return expenseDate >= start && expenseDate <= end
-      });
-    }
-
-    if (selectedCategory) {
-      filtered = filtered.filter((exp) => exp.category === selectedCategory);
-    }
-
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((exp) =>
-        exp.name.toLowerCase().includes(query) ||
-        exp.description.toLowerCase().includes(query) ||
-        dayjs(exp.created_at).format("DD-MM-YYYY").includes(query) ||
-        exp.amount.toString().includes(query)
-      );
-    }
-
-    setFilteredExpenses(filtered);
-  }, [dateRange, selectedCategory, searchQuery, expenses]);
-
-  const totalExpense = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const totalPages = Math.ceil(totalExpenses / expensesPerPage);
 
   // Open edit modal with pre-filled values
@@ -235,12 +212,12 @@ const Home = () => {
         </Button>
       </Modal>
 
-      {filteredExpenses.length === 0 ? (
+      {expenses.length === 0 ? (
         <Text color="dimmed" align="center">
           No expenses found.
         </Text>
       ) : (
-        filteredExpenses.map((expense) => (
+        expenses.map((expense) => (
           <Card key={expense.id} shadow="sm" p="lg" radius="md" className="mb-3 bg-gray-800 text-white relative transition-transform hover:scale-[1.02]">
             {/* Floating Action Icons */}
             <div className="absolute top-2 right-2 flex gap-2">
