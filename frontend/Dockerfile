@@ -7,16 +7,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy all files
+# Copy all project files
 COPY . .
 
-# Generate Prisma Client
-RUN npx prisma generate
-
-# Install Nodemon globally
-RUN npm install -g nodemon
-
-EXPOSE 5001
+# Expose frontend port
+EXPOSE 5173
 
 # Use environment to decide the command
-CMD ["sh", "-c", "npm run migrate && npm run ${NODE_ENV:-dev}"]
+CMD ["sh", "-c", "npm run $NODE_ENV"]

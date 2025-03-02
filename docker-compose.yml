@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: expenso-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - expenso-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: expenso-backend
+    ports:
+      - "5001:5001"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - expenso-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: expenso-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+    depends_on:
+      - backend
+    networks:
+      - expenso-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: always
+
+volumes:
+  pgdata:
+
+networks:
+  expenso-network:
+    driver: bridge
