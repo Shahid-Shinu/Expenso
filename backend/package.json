@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-"scripts": {
-  "development": "nodemon index.mjs",
-  "production": "node index.mjs",
-  "prisma:generate": "npx prisma generate",
-  "prisma:migrate": "npx prisma migrate deploy",
-  "migrate": "npm run prisma:generate && npm run prisma:migrate"
-  }, 
+  "scripts": {
+    "development": "nodemon index.mjs & NODE_ENV=development node cronjob.mjs",
+    "production": "node index.mjs & NODE_ENV=production node cronjob.mjs",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate deploy",
+    "migrate": "npm run prisma:generate && npm run prisma:migrate"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "node-cron": "^3.0.3",
     "pg": "^8.13.1",
     "prisma": "^6.2.1"
   },

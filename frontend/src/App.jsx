@@ -7,11 +7,12 @@ import Stats from "./Stats";
 import Expense from "./Expense";
 import Login from "./Login";
 import Signup from "./Signup";
-import { loginUser, logoutUser } from "./features/authSlice";
+import { loginSuccess, loginUser, logoutUser } from "./features/authSlice";
 import { Button, Group, Text, Menu } from "@mantine/core";
 import ProtectedRoute from "./ProtectedRoute";
 import { useNavigate } from "react-router-dom";
 import { IconUser, IconLogout } from "@tabler/icons-react";
+import axios from "axios";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
@@ -21,6 +22,19 @@ function App() {
   const handleLogout = () => {
     dispatch(logoutUser());
     navigate("/"); 
+  };
+
+  const handleLogin = (username, password) => {
+    if (!username || !password) {
+      notifications.show({
+        title: "Error",
+        message: "Username and password are required.",
+        color: "red",
+        autoClose: 2000,
+      });
+      return;
+    }
+    dispatch(loginUser(username, password, navigate));
   };
 
   return (
@@ -58,6 +72,20 @@ function App() {
             </Menu>
             ) : (
               <>
+                <Button
+                  variant="outline"
+                  onClick={async () => {
+                    try {
+                      const username = import.meta.env.VITE_DUMMY_USERNAME
+                      const password = import.meta.env.VITE_DUMMY_PASSWORD
+                      handleLogin(username, password)
+                    } catch (err) {
+                      console.error("Login failed:", err.response?.data.message || err.message);
+                    }
+                  }}
+                >
+                  Login to Dummy User
+                </Button>
                 <Button component={Link} to="/login" variant="outline">
                   Login
                 </Button>

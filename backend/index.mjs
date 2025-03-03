@@ -39,7 +39,7 @@ app.get("/expenses/:userId", async (req, res) => {
   const skip = (parseInt(page) - 1) * parseInt(limit);
 
   try {
-    const [expenses, total] = await Promise.all([
+    const [expenses, allExpenses] = await Promise.all([
       prisma.expense.findMany({
         where: {
           userId,
@@ -57,7 +57,7 @@ app.get("/expenses/:userId", async (req, res) => {
         skip: skip,
         take: parseInt(limit),
       }),
-      prisma.expense.count({ where: {
+      prisma.expense.findMany({ where: {
         userId,
         ...(parseInt(start) != 0 && parseInt(end) != 0 ? { createdAt: { gte: new Date(start), lte: new Date(end) } } : {}),
         ...(category ? { category } : {}),
@@ -71,10 +71,13 @@ app.get("/expenses/:userId", async (req, res) => {
       }
      }),
     ]);
+    const totalexpense = allExpenses.reduce((acc, val) => acc + val.amount, 0)
+    const total = allExpenses.length
 
     res.json({
       expenses,
       total,
+      totalexpense,
       page: parseInt(page),
       totalPages: Math.ceil(total / limit),
     });

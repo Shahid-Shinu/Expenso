@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { categories } from "./Expense";
 import { Card, Text, Group, ActionIcon, Modal, TextInput, NumberInput, Select, Button, Tooltip } from "@mantine/core";
-import { IconCalendar, IconTrash, IconEdit, IconAlertTriangle, IconSum, IconSearch, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { IconCalendar, IconTrash, IconEdit, IconAlertTriangle, IconSum, IconSearch, IconChevronLeft, IconChevronRight, IconDots } from "@tabler/icons-react";
 import { DatePickerInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
@@ -31,6 +31,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expensesPerPage] = useState(5);
   const [totalExpenses, setTotalExpenses] = useState(0);
+  const [totalExpense, setTotalExpense] = useState(0);
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
@@ -51,12 +52,13 @@ const Home = () => {
       const response = await axios.get(`${VITE_API_URL}/expenses/${user.id}?page=${currentPage}&limit=${expensesPerPage}&start=${dateRange[0] || 0}&end=${dateRange[1] || 0}&category=${selectedCategory || ''}&searchQuery=${searchQuery}`);
       setExpenses(response.data.expenses);
       setTotalExpenses(response.data.total)
+      setTotalExpense(response.data.totalexpense)
     } catch (error) {
       console.error("Error fetching expenses:", error);
     }
   };
 
-  const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  // const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const totalPages = Math.ceil(totalExpenses / expensesPerPage);
 
   // Open edit modal with pre-filled values
