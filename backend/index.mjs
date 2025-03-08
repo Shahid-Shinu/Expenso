@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import authRoutes from './route.mjs' 
+import expenseRoutes from './routes/expense.mjs'
 
 const app = express();
 const prisma = new PrismaClient();
@@ -10,6 +11,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api", authRoutes);
+
+app.use('/api/expenses', expenseRoutes);
 
 // Add Expense
 app.post("/addExpense", async (req, res) => {

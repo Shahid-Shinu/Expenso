@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ExpenseMenu from "./components/Menu";
 import DashboardFooter from "./components/DashboardFooter";
 import Home from "./Home";
-import Stats from "./Stats";
+import Stats from "./pages/Stats";
 import Expense from "./Expense";
 import Login from "./Login";
 import Signup from "./Signup";
@@ -97,7 +97,6 @@ function App() {
           </Group>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 overflow-auto pb-24">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -109,7 +108,6 @@ function App() {
           </Routes>
         </div>
 
-        {/* Footer */}
         <DashboardFooter />
       </div>
     </>

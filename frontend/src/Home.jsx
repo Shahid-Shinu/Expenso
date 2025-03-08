@@ -25,7 +25,9 @@ const Home = () => {
   const [category, setCategory] = useState("");
   const [createdDate, setCreatedDate] = useState(new Date());
   const [description, setDescription] = useState("");
-  const [dateRange, setDateRange] = useState([null, null]);
+  // const startDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+  const startDate = new Date(new Date().setMonth(new Date().getMonth() - 1))
+  const [dateRange, setDateRange] = useState([startDate, new Date()]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -155,6 +157,7 @@ const Home = () => {
         value={dateRange}
         onChange={setDateRange}
         className="flex-1"
+        clearable
       />
       <Select
         label="Category"
