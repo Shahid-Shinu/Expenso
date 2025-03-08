@@ -7,6 +7,7 @@ import { Notifications } from '@mantine/notifications';
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { BrowserRouter } from "react-router-dom";
+import ErrorBoundary from "./ErrorBoundary";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -14,7 +15,9 @@ createRoot(document.getElementById('root')).render(
     <Notifications position='top-center'/>
     <Provider store={store}>
     <BrowserRouter> 
+    <ErrorBoundary>
       <App />
+    </ErrorBoundary>
     </BrowserRouter>
     </Provider>
     </MantineProvider>
