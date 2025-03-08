@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { NoUser } from "./components/NoUser";
 import axios from "axios";
 import { categories } from "./Expense";
 import { Card, Text, Group, ActionIcon, Modal, TextInput, NumberInput, Select, Button, Tooltip } from "@mantine/core";
@@ -147,6 +148,10 @@ const Home = () => {
       hour12: true,
     }).format(new Date(dateString));
   };
+
+  if(!user) {
+    return <NoUser />
+  }
 
   return (
     <>

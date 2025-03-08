@@ -3,6 +3,7 @@ import { TextInput, NumberInput, Select, Textarea, Button } from "@mantine/core"
 import { notifications } from "@mantine/notifications";
 import {IconShoppingCart,IconBus,IconMovie,IconHome,IconPizza,IconDots,IconCheck,IconX} from "@tabler/icons-react";
 import { DatePickerInput } from "@mantine/dates";
+import { NoUser } from "./components/NoUser";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -81,6 +82,10 @@ const Expense = () => {
       });
     }
   };
+
+  if(!user) {
+    return <NoUser />
+  }
 
   return (
     <div className="max-w-lg mx-auto bg-gray-800 text-white p-6 rounded-lg shadow-md">

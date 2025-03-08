@@ -31,7 +31,7 @@ const DashboardFooter = () => {
         radius="xl"
         variant="filled"
         color="purple"
-        onClick={() => navigate("/home")}
+        onClick={() => handleNavigation("/home")}
       >
         <IconHome size={32} />
       </ActionIcon>

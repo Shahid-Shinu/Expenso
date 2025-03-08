@@ -21,7 +21,7 @@ function App() {
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    navigate("/"); 
+    navigate("/login"); 
   };
 
   const handleLogin = (username, password) => {
@@ -99,7 +99,7 @@ function App() {
 
         <div className="flex-1 overflow-auto pb-24">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/add-expense" element={<Expense />} />

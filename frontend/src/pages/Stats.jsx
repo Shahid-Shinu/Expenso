@@ -12,6 +12,7 @@ import { DatePickerInput } from "@mantine/dates";
 import { categories } from "../Expense";
 import axios from 'axios';
 import { Loader } from "@mantine/core";
+import { NoUser } from '../components/NoUser';
 import _ from "lodash";
 
 const fetchExpenses = async (user, dateRange, selectedCategory, searchQuery) => {
@@ -128,6 +129,10 @@ const StatsPage = () => {
 
   if(loading) {
     return <Loader size="lg" />;
+  }
+
+  if(!user) {
+    return <NoUser />
   }
 
   return (

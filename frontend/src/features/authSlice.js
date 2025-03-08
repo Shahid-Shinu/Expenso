@@ -35,7 +35,7 @@ export const loginUser = (username, password, navigate) => async (dispatch) => {
   try {
     const response = await axios.post(`${BACKEND_URL}/api/login`, { username, password });
     dispatch(loginSuccess(response.data));
-    navigate("/");
+    navigate("/home");
   } catch (error) {
     notifications.show({
       title: 'Error!',

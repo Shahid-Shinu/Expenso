@@ -1,6 +1,6 @@
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "./features/authSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, TextInput, Container, Title, Paper } from "@mantine/core";
 import { useNavigate, Link } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
@@ -10,6 +10,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const user = useSelector((state) => state.auth.user);
 
   const handleLogin = () => {
     if (!username || !password) {
@@ -23,6 +24,12 @@ const Login = () => {
     }
     dispatch(loginUser(username, password, navigate));
   };
+
+  useEffect(() => {
+    if(user) {
+      navigate('/home')
+    }
+  }, [user])
 
   return (
     <Container size="xs" mt={50}>
