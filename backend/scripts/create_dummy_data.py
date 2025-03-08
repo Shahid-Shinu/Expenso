@@ -9,20 +9,20 @@ import argparse
 import uuid
 
 
-parser = argparse.ArgumentParser(description="Load environment variables from a .env file")
-parser.add_argument('--env_file', type=str, help=".env file", required=True)
+# parser = argparse.ArgumentParser(description="Load environment variables from a .env file")
+# parser.add_argument('--env_file', type=str, help=".env file", required=True)
 
-args = parser.parse_args()
-dotenv_file = '.env'
+# args = parser.parse_args()
+# dotenv_file = '.env'
 
-dotenv_path = Path(__file__).parent.parent / dotenv_file
-load_dotenv(dotenv_path=dotenv_path)
-print(dotenv_path)
+# dotenv_path = Path(__file__).parent.parent / dotenv_file
+# load_dotenv(dotenv_path=dotenv_path)
+# print(dotenv_path)
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-DUMMY_USERNAME = os.getenv("DUMMY_USERNAME")
-DUMMY_PASSWORD = os.getenv("DUMMY_PASSWORD")
+DUMMY_USERNAME = os.getenv("VITE_DUMMY_USERNAME")
+DUMMY_PASSWORD = os.getenv("VITE_DUMMY_PASSWORD")
 
 category_names = {
     'Food': ['Lunch', 'Dinner', 'Snacks', 'Coffee', 'Groceries'],

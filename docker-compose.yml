@@ -29,6 +29,15 @@ services:
       - "5001:5001"
     environment:
       NODE_ENV: ${NODE_ENV}
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_DUMMY_USERNAME: ${VITE_DUMMY_USERNAME}
+      VITE_DUMMY_PASSWORD: ${VITE_DUMMY_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       db:
         condition: service_healthy
@@ -48,6 +57,9 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV}
       VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_DUMMY_USERNAME: ${VITE_DUMMY_USERNAME}
+      VITE_DUMMY_PASSWORD: ${VITE_DUMMY_PASSWORD}
     depends_on:
       - backend
     networks:
