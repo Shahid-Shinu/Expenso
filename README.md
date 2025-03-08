@@ -33,3 +33,5 @@ Installations
 npm install @tabler/icons-react
 
 npm install axios
+
+docker-compose --env-file .env.local up --build
