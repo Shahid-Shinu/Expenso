@@ -11,7 +11,7 @@ import { loginSuccess, loginUser, logoutUser } from "./features/authSlice";
 import { Button, Group, Text, Menu } from "@mantine/core";
 import ProtectedRoute from "./ProtectedRoute";
 import { useNavigate } from "react-router-dom";
-import { IconUser, IconLogout } from "@tabler/icons-react";
+import { IconUser, IconLogout, IconRocket } from "@tabler/icons-react";
 import axios from "axios";
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
         {/* Header with Menu & Auth Buttons */}
         <div className="flex justify-between m-5 items-center">
           <ExpenseMenu />
+          <h1 className="font-bold text-green-400 flex items-center"> Expenso {<IconRocket size={30} />} </h1>
           <Group>
             {user ? (
               <Menu>
