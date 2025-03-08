@@ -9,7 +9,6 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
-  console.log('hehe',username, password)
 
   const user = await prisma.user.findUnique({ where: { username } });
   if (!user) return res.status(400).json({ message: "User not found" });
